@@ -138,7 +138,7 @@ class EvaluatorMT(object):
         txt = []
 
         # for perplexity
-        loss_fn2 = nn.CrossEntropyLoss(weight=self.decoder.loss_fn[lang2_id].weight, size_average=False)
+        loss_fn2 = nn.CrossEntropyLoss(weight=self.decoder.loss_fn[lang2_id].weight, reduction='sum')
         n_words2 = self.params.n_words[lang2_id]
         count = 0
         xe_loss = 0
@@ -196,7 +196,7 @@ class EvaluatorMT(object):
         txt = []
 
         # for perplexity
-        loss_fn3 = nn.CrossEntropyLoss(weight=self.decoder.loss_fn[lang3_id].weight, size_average=False)
+        loss_fn3 = nn.CrossEntropyLoss(weight=self.decoder.loss_fn[lang3_id].weight, reduction='sum')
         n_words3 = self.params.n_words[lang3_id]
         count = 0
         xe_loss = 0

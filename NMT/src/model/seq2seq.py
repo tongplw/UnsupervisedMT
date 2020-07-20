@@ -424,7 +424,7 @@ def build_seq2seq_model(params, data, cuda=True):
     for n_words in params.n_words:
         loss_weight = torch.FloatTensor(n_words).fill_(1)
         loss_weight[params.pad_index] = 0
-        loss_fn.append(nn.CrossEntropyLoss(loss_weight, size_average=True))
+        loss_fn.append(nn.CrossEntropyLoss(loss_weight, reduction='mean'))
     decoder.loss_fn = nn.ModuleList(loss_fn)
 
     # language model
