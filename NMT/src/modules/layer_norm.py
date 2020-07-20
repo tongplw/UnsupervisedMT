@@ -51,4 +51,4 @@ class LayerNorm(nn.Module):
         w = self.w[:n]
         b = self.b[:n]
         output = F.batch_norm(input, dummy, dummy, w, b, True, 0., self.eps)
-        return torch.addcmul(self.bias, 1, output.view(*shape), self.gain)
+        return torch.addcmul(self.bias, output.view(*shape), 1, self.gain)

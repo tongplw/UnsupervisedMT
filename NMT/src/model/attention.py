@@ -778,7 +778,7 @@ def build_attention_model(params, data, cuda=True):
         loss_weight = torch.FloatTensor(n_words).fill_(1)
         loss_weight[params.pad_index] = 0
         if params.label_smoothing <= 0:
-            loss_fn.append(nn.CrossEntropyLoss(loss_weight, size_average=True))
+            loss_fn.append(nn.CrossEntropyLoss(loss_weight, reduction='mean'))
         else:
             loss_fn.append(LabelSmoothedCrossEntropyLoss(
                 params.label_smoothing,
