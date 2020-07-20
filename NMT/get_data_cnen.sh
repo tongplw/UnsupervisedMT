@@ -49,6 +49,9 @@ FASTBPE=$FASTBPE_DIR/fast
 FASTTEXT_DIR=$TOOLS_PATH/fastText
 FASTTEXT=$FASTTEXT_DIR/fasttext
 
+# muse
+MUSE_DIR=$TOOLS_PATH/muse
+
 # files full paths
 SRC_RAW=$MONO_PATH/all.cn
 TGT_RAW=$MONO_PATH/all.en
@@ -63,6 +66,8 @@ SRC_VALID=$PARA_PATH/dev.cn
 TGT_VALID=$PARA_PATH/dev.en
 SRC_TEST=$PARA_PATH/test.cn
 TGT_TEST=$PARA_PATH/test.en
+SRC_MON_EMB=$PARA_PATH/all_emb.cn
+TGT_MON_EMB=$PARA_PATH/all_emb.en
 
 
 #
@@ -110,6 +115,14 @@ if [ ! -f "$FASTTEXT" ]; then
   make
 fi
 echo "fastText compiled in: $FASTTEXT"
+
+# Download muse
+cd $TOOLS_PATH
+if [ ! -d "$MUSE_DIR" ]; then
+  echo "Cloning muse from GitHub repository..."
+  git clone --depth 1 https://github.com/facebookresearch/MUSE.git
+fi
+echo "muse found in: $MUSE_DIR"
 
 
 #
@@ -281,14 +294,20 @@ echo ""
 # Train fastText on concatenated embeddings
 #
 
-if ! [[ -f "$CONCAT_BPE" ]]; then
-  echo "Concatenating source and target monolingual data..."
-  cat $SRC_TOK.$CODES $TGT_TOK.$CODES | shuf > $CONCAT_BPE
+if ! [[ -f "$SRC_MON_EMB" ]]; then
+  echo "Training fastText on $SRC_MON_EMB..."
+  $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $SRC_MON_EMB -output $SRC_MON_EMB
 fi
-echo "Concatenated data in: $CONCAT_BPE"
+echo "Monolingual embeddings in: $SRC_MON_EMB"
 
-if ! [[ -f "$CONCAT_BPE.vec" ]]; then
-  echo "Training fastText on $CONCAT_BPE..."
-  $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $CONCAT_BPE -output $CONCAT_BPE
+if ! [[ -f "$TGT_MON_EMB" ]]; then
+  echo "Training fastText on $TGT_MON_EMB..."
+  $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $TGT_MON_EMB -output $TGT_MON_EMB
+fi
+echo "Monolingual embeddings in: $TGT_MON_EMB"
+
+if ! [[ -f "$CONCAT_BPE" ]]; then
+  echo "Aligning source and target monolingual embeddings..."
+  $MUSE_DIR/unsupervised.py --src_lang zh --tgt_lang en --src_emb $SRC_MON_EMB.vec --tgt_emb $TGT_MON_EMB.vec --n_refinement 5
 fi
 echo "Cross-lingual embeddings in: $CONCAT_BPE.vec"
