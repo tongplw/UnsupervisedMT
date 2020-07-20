@@ -50,7 +50,7 @@ FASTTEXT_DIR=$TOOLS_PATH/fastText
 FASTTEXT=$FASTTEXT_DIR/fasttext
 
 # muse
-MUSE_DIR=$TOOLS_PATH/muse
+MUSE_DIR=$TOOLS_PATH/MUSE
 
 # files full paths
 SRC_RAW=$MONO_PATH/all.cn
