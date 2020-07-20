@@ -317,7 +317,7 @@ class TransformerDecoder(nn.Module):
                 break
 
         if cur_len == max_len:
-            decoded[max_len - 1].masked_fill_(unfinished_sents.byte(), self.eos_index)
+            decoded[max_len - 1].masked_fill_(unfinished_sents.bool(), self.eos_index)
         assert (decoded == self.eos_index).sum() == bs
 
         return decoded[:cur_len], lengths, one_hot
