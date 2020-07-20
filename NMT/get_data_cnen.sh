@@ -296,13 +296,13 @@ echo ""
 
 if ! [[ -f "$SRC_MON_EMB" ]]; then
   echo "Training fastText on $SRC_MON_EMB..."
-  $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $SRC_MON_EMB -output $SRC_MON_EMB
+  $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $SRC_TOK.$CODES -output $SRC_MON_EMB
 fi
 echo "Monolingual embeddings in: $SRC_MON_EMB"
 
 if ! [[ -f "$TGT_MON_EMB" ]]; then
   echo "Training fastText on $TGT_MON_EMB..."
-  $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $TGT_MON_EMB -output $TGT_MON_EMB
+  $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $TGT_TOK.$CODES -output $TGT_MON_EMB
 fi
 echo "Monolingual embeddings in: $TGT_MON_EMB"
 
