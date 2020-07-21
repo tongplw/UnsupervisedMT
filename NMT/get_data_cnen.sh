@@ -308,6 +308,6 @@ echo "Monolingual embeddings in: $TGT_MON_EMB"
 
 if ! [[ -f "$CONCAT_BPE" ]]; then
   echo "Aligning source and target monolingual embeddings..."
-  python3 $MUSE_DIR/unsupervised.py --src_lang zh --tgt_lang en --src_emb $SRC_MON_EMB.vec --tgt_emb $TGT_MON_EMB.vec --n_refinement 5
+  python3 $MUSE_DIR/unsupervised.py --src_lang zh --tgt_lang en --src_emb $SRC_MON_EMB.vec --tgt_emb $TGT_MON_EMB.vec --n_refinement 5 --normalize_embeddings center --emb_dim 512
 fi
 echo "Cross-lingual embeddings in: $CONCAT_BPE.vec"
