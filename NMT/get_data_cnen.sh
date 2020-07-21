@@ -294,13 +294,13 @@ echo ""
 # Train fastText on concatenated embeddings
 #
 
-if ! [[ -f "$SRC_MON_EMB" ]]; then
+if ! [[ -f "$SRC_MON_EMB.vec" ]]; then
   echo "Training fastText on $SRC_MON_EMB..."
   $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $SRC_TOK.$CODES -output $SRC_MON_EMB
 fi
 echo "Monolingual embeddings in: $SRC_MON_EMB"
 
-if ! [[ -f "$TGT_MON_EMB" ]]; then
+if ! [[ -f "$TGT_MON_EMB.vec" ]]; then
   echo "Training fastText on $TGT_MON_EMB..."
   $FASTTEXT skipgram -epoch $N_EPOCHS -minCount 0 -dim 512 -thread $N_THREADS -ws 5 -neg 10 -input $TGT_TOK.$CODES -output $TGT_MON_EMB
 fi
